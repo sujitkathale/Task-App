@@ -166,30 +166,54 @@ export default function Register() {
               </Form.Group>
               <br />
 
-              <div className="mb-3">
+              <div className=" mb-3">
                 <label className="pr-2">Gender:</label>
-                <input
+                <div className="mt-1 pl-2 form-check-inline">
+                  <input
+                    type="radio"
+                    value="Male"
+                    name="gender"
+                    onChange={(event) => {
+                      setGender(event.target.value);
+                    }}
+                  />
+                  <label className="mt-1 pl-2 form-check-label">Male</label>
+                </div>
+                <div className="mt-1 pl-2 form-check-inline">
+                  <input
+                    type="radio"
+                    value="Female"
+                    name="gender"
+                    onChange={(event) => {
+                      setGender(event.target.value);
+                    }}
+                  />
+                  <label className="mt-1 pl-2 form-check-label">Female</label>
+                </div>
+                {/* <input
                   type="radio"
                   value="Male"
                   name="gender"
+                  id="inlineRadio1"
                   // className="mt-1 pl-2"
                   onChange={(event) => {
                     setGender(event.target.value);
                   }}
-                />{" "}
-                Male &nbsp;
+                />{" "} */}
+                {/* Male &nbsp;
                 <input
                   type="radio"
                   value="Female"
                   name="gender"
+                  id="inlineRadio1"
                   // className="mt-1 pl-2"
                   onChange={(event) => {
                     setGender(event.target.value);
                   }}
                 />{" "}
-                Female
-                <br />
+                Female */}
               </div>
+
               <br />
 
               <div className="text-center ">

@@ -349,7 +349,7 @@ export default function Addtask() {
                       id="dateTask"
                       required
                       ref={dateref}
-                      className="form-control  block border-0"
+                      className="form-control block border-0"
                       placeholder="date"
                       onChange={(event) => {
                         setDate(event.target.value);

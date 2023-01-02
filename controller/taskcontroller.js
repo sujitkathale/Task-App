@@ -130,7 +130,7 @@ const taskcontroller = {
       (err, data) => {
         if (err) {
           console.log(err);
-          res.json({ err: 0, msg: "Stage Updated" });
+          res.json({ err: 0, msg: "Stage not Updated" });
         } else {
           res.json({ msg: "updated sucessfully" });
         }

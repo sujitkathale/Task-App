@@ -96,7 +96,7 @@ const taskSlice = createSlice({
         // state.tasks = action.payload;
         var newData = state.tasks.filter((data) => {
           if (data._id == action.payload.id) {
-            data.stages = data.stages + 1;
+            data.stages = data.stages - 1;
             return data;
           } else {
             return data;
