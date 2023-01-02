@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Row, Col, Form, Button, Card } from "react-bootstrap";
+import { useHistory } from "react-router";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MyAccount from "./MyAccount";
@@ -19,7 +20,7 @@ export default function Profile() {
   let [lname, setLname] = useState("");
   let [mobile, setMobile] = useState("");
   let [email, setEmail] = useState("");
-
+  const History = useHistory();
   const success = (data) =>
     toast.success(data, { position: toast.POSITION.TOP_CENTER });
   const failure = (data) =>
@@ -53,6 +54,8 @@ export default function Profile() {
         failure(res.data.err);
       } else {
         success(res.data.msg);
+        History.push("/Profile");
+        // setShowInvoice(false);
         // setTimeout(() => {
         //     window.location.reload();
         // }, 3000);

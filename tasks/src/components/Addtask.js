@@ -123,6 +123,7 @@ export default function Addtask() {
     console.log("edit  clicked");
     settaskid(val);
     settask(val1.task);
+    setdes(val1.des);
     setpriority(val1.priority);
     setDate(val1.date);
     setstages(val1.stages);

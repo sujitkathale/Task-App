@@ -151,7 +151,7 @@ body.dark {
 .btnlog {
   max-width: 500px;
   background-color: orange;
-  padding-left: 20px;
+  /* padding-left: 20px; */
 }
 input:focus {
   width: 100%;
