@@ -50,7 +50,7 @@ function Dashboard(props) {
         dispatch(Fetch_Task(res.data.data));
         // setPostdata(res.data.data);
         console.log(res.data);
-        setlen(res.data.data.length);
+        res.data.data !== null ? setlen(res.data.data.length) : setlen(0);
         var data2 = {
           backlog: 0,
           todo: 0,
@@ -95,7 +95,7 @@ function Dashboard(props) {
       <h5 className="">Welcome User: {localStorage.getItem("user")}</h5>
       <br />
       <Row>
-        <Col className="container" lg={4} md={7} sm={7}>
+        <Col className="container graph" lg={4} md={7} sm={7}>
           <Bar
             data={{
               labels: ["BackLog", "Todo", "Ongoing", "Done"],

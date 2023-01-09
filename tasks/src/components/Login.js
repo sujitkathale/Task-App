@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { login } from "../config/MyService";
-
+import React, { useState, useEffect, useRef } from "react";
+import { login, captcha } from "../config/MyService";
+import ReCAPTCHA from "react-google-recaptcha";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const regForEmail = RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 toast.configure();
 export default function Login() {
+  const [verfied, setVerifed] = useState(false);
   const [state, setState] = useState({ email: "", password: "" });
-
   const History = useHistory();
+  const [ctoken, setcToken] = useState("");
+  const [error, setError] = useState("");
+  const reCaptcha = useRef();
+
   const handler = (event) => {
     const { name, value } = event.target;
     setState({ ...state, [name]: value });
@@ -32,9 +36,30 @@ export default function Login() {
       History.push("/Dash");
     }
   }, []);
-
+  //recaptcha function
+  function onChange(value) {
+    console.log("Captcha value:", value);
+    setVerifed(true);
+    setcToken(value);
+  }
   const postRegis = (event) => {
     event.preventDefault();
+
+    let captchadata = { ctoken: ctoken, email: state.email };
+    console.log(captchadata);
+    if (!captchadata) {
+      failure("Yoou must verify the captcha");
+      return;
+    }
+    captcha(captchadata)
+      .then((res) => {
+        console.log(res);
+        success("Captcha Verify Successfully");
+      })
+      .catch(({ response }) => {
+        failure(response.data.error);
+      });
+
     let data = { email: state.email, password: state.password };
     console.log(data);
     login(data)
@@ -91,7 +116,7 @@ export default function Login() {
                   required
                 />
                 {state.email != "" && !regForEmail.test(state.email) && (
-                  <span className="text-primary">Enter email correctly</span>
+                  <span className="text-danger">Enter email correctly</span>
                 )}
               </div>
               <br />
@@ -106,16 +131,31 @@ export default function Login() {
                   onChange={handler}
                 />
                 {state.password != "" && state.password.length < 8 && (
-                  <span className="text-primary">Enter password correctly</span>
+                  <span className="text-danger">Enter password correctly</span>
                 )}
               </div>
+              <div className="">
+                {/* <ReCAPTCHA
+                  sitekey="6Lfmm9EjAAAAAODpoGitdS1NiZnVxPRkg34HpdPh"
+                  onChange={onChange}
+                /> */}
+
+                <ReCAPTCHA
+                  ref={reCaptcha}
+                  sitekey="6Lfmm9EjAAAAAODpoGitdS1NiZnVxPRkg34HpdPh"
+                  onChange={onChange}
+                  // onChange={(ctoken) => setcToken(ctoken)}
+                  onExpired={(e) => setcToken("")}
+                />
+              </div>
+
               <br />
-              <br />
-              <div className="text-center btnlog">
+              <div className="text-center">
                 <input
                   type="submit"
                   value="LOGIN"
-                  className="btn text-center"
+                  className="btn btn-warning btn-lg btn-block text-center"
+                  disabled={!verfied}
                 />
               </div>
             </form>

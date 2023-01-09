@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const db =
-  "mongodb+srv://sujitkathale:Sujit1234@cluster0.nkz9tla.mongodb.net/?retryWrites=true&w=majority";
+const db = process.env.MONGO_URL;
 async function connectDB() {
   try {
     await mongoose.connect(db, { useNewUrlParser: true });

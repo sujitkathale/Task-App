@@ -3,7 +3,7 @@ const taskcontroller = require("../controller/taskcontroller");
 const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const jwtSecret = "ddsfftyy677yttfff";
+const jwtSecret = process.env.JWT_SECRET;
 function autenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
@@ -50,5 +50,5 @@ router.delete("/deleteadd/:id", taskcontroller.deleteadd);
 router.post("/updatetask/:id", taskcontroller.updatetask);
 router.post("/editstages", taskcontroller.editstages);
 router.post("/editstagesdrag", taskcontroller.editstagesdrag);
-
+router.delete("/deletedrag/:id", taskcontroller.deletedrag);
 module.exports = router;

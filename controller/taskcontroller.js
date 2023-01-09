@@ -137,7 +137,17 @@ const taskcontroller = {
       }
     );
   },
-
+  deletedrag: (req, res) => {
+    let id = req.params.id;
+    console.log(id);
+    Taskmodel.deleteOne({ _id: id }, (err) => {
+      if (err) {
+        res.status(200).json({ status: 401, err: "Something went Wrong" });
+      } else {
+        res.status(200).json({ status: 200, msg: "Deleted Successfully" });
+      }
+    });
+  },
   fetchtoptask: (req, res) => {
     Taskmodel.find(
       { email: req.params.email },

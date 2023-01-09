@@ -5,6 +5,7 @@ import {
   editstages,
   editstagesdrag,
   fetchtask,
+  trashDrag,
   updatetask,
 } from "../config/MyService";
 const initialState = {
@@ -67,7 +68,7 @@ const taskSlice = createSlice({
             return data;
           }
         });
-        // state.tasks = newData;
+        state.tasks = newData;
       })
       .addCase(Update_Task.rejected, (state, action) => {
         state.message = action.payload;
@@ -141,6 +142,23 @@ const taskSlice = createSlice({
       })
       .addCase(Drag_Stage.rejected, (state, action) => {
         state.message = action.payload;
+      })
+
+      .addCase(Drag_Trash.pending, (state) => {
+        console.log("delete Promise Pending");
+      })
+      .addCase(Drag_Trash.fulfilled, (state, action) => {
+        console.log(action.payload);
+
+        var newData = state.tasks.filter((data) => {
+          if (data._id !== action.payload) {
+            return data;
+          }
+        });
+        state.tasks = newData;
+      })
+      .addCase(Drag_Trash.rejected, (state, action) => {
+        console.log(action.payload);
       });
   },
 });
@@ -202,4 +220,12 @@ export const Drag_Stage = createAsyncThunk("dragstage/stage", async (data) => {
   const res = await editstagesdrag(data);
   // console.log(res);
   return data;
+});
+
+//Drag & Drop Trash
+export const Drag_Trash = createAsyncThunk("dragtrash/trash", async (id) => {
+  console.log(id);
+  const res = await trashDrag(id);
+  console.log(res);
+  return id;
 });
