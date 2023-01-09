@@ -1,7 +1,7 @@
 const registermodel = require("../db/RegisterSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const jwtSecret = "ddsfftyy677yttfff";
+const jwtSecret = process.env.JWT_SECRET;
 
 function autenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];

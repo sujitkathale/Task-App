@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router";
-import Draggable from "react-draggable";
+// import Draggable from "react-draggable";
 import { fetchtask } from "../config/MyService";
 import {
   Container,
@@ -32,9 +32,10 @@ import {
   Drag_Stage,
   EditAdd_Stage,
   EditMinus_Stage,
+  Drag_Trash,
 } from "../store/taskSlice";
 import { useSelector, useDispatch } from "react-redux";
-
+import { FaTrashAlt } from "react-icons/fa";
 const regExForTask = RegExp(/^[ A-Za-z0-9]*$/);
 
 // toast.configure();
@@ -48,7 +49,15 @@ export default function Addtask() {
   console.log(tasklist);
 
   const History = useHistory();
-
+  const [showTrash, setshowTrash] = useState("");
+  const [modalDeleteShow, setModalDeleteShow] = useState(0);
+  const handleDeleteClose = () => {
+    setBool({
+      boolVal: false,
+      id: "",
+    });
+    setModalDeleteShow(false);
+  };
   const [date, setDate] = useState("");
 
   let [taskid, settaskid] = useState("");
@@ -56,6 +65,10 @@ export default function Addtask() {
   let [des, setdes] = useState("");
   let [stages, setstages] = useState("");
   let [priority, setpriority] = useState("");
+  const [bool, setBool] = useState({
+    boolVal: false,
+    id: "",
+  });
   // const [postdata, setPostdata] = useState([]);
 
   const [show, setShow] = useState(false);
@@ -166,7 +179,7 @@ export default function Addtask() {
     };
     console.log(editData);
     dispatch(EditMinus_Stage(editData));
-    intial();
+    // intial();
     // editstages({ data: -1, id: id }).then((res) => {
     //   if (res.data.err == 0) {
     //     intial();
@@ -239,7 +252,7 @@ export default function Addtask() {
     let id = ev.dataTransfer.getData("id");
 
     let data = { id: id, stage: stage };
-
+    console.log(data);
     dispatch(Drag_Stage(data));
     intial();
     // editstagesdrag(data).then((res) => {
@@ -250,6 +263,26 @@ export default function Addtask() {
     //     intial();
     //   }
     // });
+  };
+  const trash = () => {
+    // let id = ev.dataTransfer.getData("id");
+    setBool({
+      boolVal: false,
+      id: "",
+    });
+    setModalDeleteShow(0);
+    dispatch(Drag_Trash(showTrash));
+    // intial();
+    setshowTrash("");
+  };
+  const dragTrash = (ev) => {
+    setshowTrash(ev.dataTransfer.getData("id"));
+    setBool({
+      boolVal: true,
+      id: ev.dataTransfer.getData("id"),
+    });
+    setModalDeleteShow(1);
+    // console.log("Trash draged");
   };
   return (
     <div>
@@ -406,10 +439,14 @@ export default function Addtask() {
                   {tasklist
                     .filter((post) => post.stages == 0)
                     .map((pro, index) => (
+                      // <Draggable>
                       <tr
                         key={index}
                         draggable
                         onDragStart={(e) => onDragStart(e, pro._id)}
+                        className={
+                          bool.boolVal && bool.id == pro._id ? `onHide` : ``
+                        }
                       >
                         {/* <td className="col-2">{index + 1}</td> */}
 
@@ -468,6 +505,7 @@ export default function Addtask() {
                           </a>
                         </td>
                       </tr>
+                      // </Draggable>
                     ))}
                 </Table>
               </Card>
@@ -503,70 +541,73 @@ export default function Addtask() {
                   {tasklist
                     .filter((post) => post.stages == 1)
                     .map((pro, index) => (
-                      <Draggable>
-                        <tr
-                          key={index}
-                          draggable
-                          onDragStart={(e) => onDragStart(e, pro._id)}
-                        >
-                          {/* <td className="col-2">{index + 1}</td> */}
+                      // <Draggable>
+                      <tr
+                        key={index}
+                        draggable
+                        className={
+                          bool.boolVal && bool.id == pro._id ? `onHide` : ``
+                        }
+                        onDragStart={(e) => onDragStart(e, pro._id)}
+                      >
+                        {/* <td className="col-2">{index + 1}</td> */}
 
-                          <td>{ReactHtmlParser(pro.task)}</td>
-                          <td>{ReactHtmlParser(pro.des)}</td>
-                          <td className="col-3">{pro.priority}</td>
+                        <td>{ReactHtmlParser(pro.task)}</td>
+                        <td>{ReactHtmlParser(pro.des)}</td>
+                        <td className="col-3">{pro.priority}</td>
 
-                          <td>{pro.date.substring(0, 10)}</td>
-                          <td>{pro.duedate.substring(0, 10)}</td>
-                          <td className="text-center">
-                            <Row style={{ width: "200px", marginLeft: "40px" }}>
-                              <Col lg={2} sm={2} md={2}>
-                                <a>
-                                  <AiOutlineBackward
-                                    size="25px"
-                                    onClick={() => editminus(pro._id)}
-                                  />
-                                </a>
-                              </Col>
-                              <Col lg={3} sm={3} md={3}>
-                                <input
-                                  type="text"
-                                  value={pro.stages}
-                                  disabled
-                                  style={{ width: "40px" }}
+                        <td>{pro.date.substring(0, 10)}</td>
+                        <td>{pro.duedate.substring(0, 10)}</td>
+                        <td className="text-center">
+                          <Row style={{ width: "200px", marginLeft: "40px" }}>
+                            <Col lg={2} sm={2} md={2}>
+                              <a>
+                                <AiOutlineBackward
+                                  size="25px"
+                                  onClick={() => editminus(pro._id)}
                                 />
-                              </Col>
-                              <Col lg={2} sm={2} md={2}>
-                                <a>
-                                  <AiOutlineForward
-                                    size="25px"
-                                    onClick={() => editadd(pro._id)}
-                                  />
-                                </a>
-                              </Col>
-                            </Row>
-                          </td>
-                          <td>
-                            <a
-                              className="btn "
-                              onClick={() => deletetask(pro._id)}
-                            >
-                              {" "}
-                              <AiFillDelete color="red" />{" "}
-                            </a>
-                          </td>
+                              </a>
+                            </Col>
+                            <Col lg={3} sm={3} md={3}>
+                              <input
+                                type="text"
+                                value={pro.stages}
+                                disabled
+                                style={{ width: "40px" }}
+                              />
+                            </Col>
+                            <Col lg={2} sm={2} md={2}>
+                              <a>
+                                <AiOutlineForward
+                                  size="25px"
+                                  onClick={() => editadd(pro._id)}
+                                />
+                              </a>
+                            </Col>
+                          </Row>
+                        </td>
+                        <td>
+                          <a
+                            className="btn "
+                            onClick={() => deletetask(pro._id)}
+                          >
+                            {" "}
+                            <AiFillDelete color="red" />{" "}
+                          </a>
+                        </td>
 
-                          <td>
-                            <a
-                              className="btn "
-                              onClick={(e) => {
-                                edit(e, pro._id, pro);
-                              }}
-                            >
-                              <AiFillEdit color="green" />
-                            </a>
-                          </td>
-                        </tr>
-                      </Draggable>
+                        <td>
+                          <a
+                            className="btn "
+                            onClick={(e) => {
+                              edit(e, pro._id, pro);
+                            }}
+                          >
+                            <AiFillEdit color="green" />
+                          </a>
+                        </td>
+                      </tr>
+                      // </Draggable>
                     ))}
                 </Table>
               </Card>
@@ -602,71 +643,74 @@ export default function Addtask() {
                   {tasklist
                     .filter((post) => post.stages == 2)
                     .map((pro, index) => (
-                      <Draggable>
-                        <tr
-                          key={index}
-                          draggable
-                          onDragStart={(e) => onDragStart(e, pro._id)}
-                        >
-                          {/* <td className="col-2">{index + 1}</td> */}
+                      // <Draggable>
+                      <tr
+                        key={index}
+                        draggable
+                        onDragStart={(e) => onDragStart(e, pro._id)}
+                        className={
+                          bool.boolVal && bool.id == pro._id ? `onHide` : ``
+                        }
+                      >
+                        {/* <td className="col-2">{index + 1}</td> */}
 
-                          <td>{ReactHtmlParser(pro.task)}</td>
+                        <td>{ReactHtmlParser(pro.task)}</td>
 
-                          <td>{ReactHtmlParser(pro.des)}</td>
-                          <td className="col-3">{pro.priority}</td>
+                        <td>{ReactHtmlParser(pro.des)}</td>
+                        <td className="col-3">{pro.priority}</td>
 
-                          <td>{pro.date.substring(0, 10)}</td>
-                          <td>{pro.duedate.substring(0, 10)}</td>
-                          <td className="text-center">
-                            <Row style={{ width: "200px", marginLeft: "40px" }}>
-                              <Col lg={2} sm={2} md={2}>
-                                <a>
-                                  <AiOutlineBackward
-                                    size="25px"
-                                    onClick={() => editminus(pro._id)}
-                                  />
-                                </a>
-                              </Col>
-                              <Col lg={3} sm={3} md={3}>
-                                <input
-                                  type="text"
-                                  value={pro.stages}
-                                  disabled
-                                  style={{ width: "40px" }}
+                        <td>{pro.date.substring(0, 10)}</td>
+                        <td>{pro.duedate.substring(0, 10)}</td>
+                        <td className="text-center">
+                          <Row style={{ width: "200px", marginLeft: "40px" }}>
+                            <Col lg={2} sm={2} md={2}>
+                              <a>
+                                <AiOutlineBackward
+                                  size="25px"
+                                  onClick={() => editminus(pro._id)}
                                 />
-                              </Col>
-                              <Col lg={2} sm={2} md={2}>
-                                <a>
-                                  <AiOutlineForward
-                                    size="25px"
-                                    onClick={() => editadd(pro._id)}
-                                  />
-                                </a>
-                              </Col>
-                            </Row>
-                          </td>
-                          <td>
-                            <a
-                              className="btn "
-                              onClick={() => deletetask(pro._id)}
-                            >
-                              {" "}
-                              <AiFillDelete color="red" />{" "}
-                            </a>
-                          </td>
+                              </a>
+                            </Col>
+                            <Col lg={3} sm={3} md={3}>
+                              <input
+                                type="text"
+                                value={pro.stages}
+                                disabled
+                                style={{ width: "40px" }}
+                              />
+                            </Col>
+                            <Col lg={2} sm={2} md={2}>
+                              <a>
+                                <AiOutlineForward
+                                  size="25px"
+                                  onClick={() => editadd(pro._id)}
+                                />
+                              </a>
+                            </Col>
+                          </Row>
+                        </td>
+                        <td>
+                          <a
+                            className="btn "
+                            onClick={() => deletetask(pro._id)}
+                          >
+                            {" "}
+                            <AiFillDelete color="red" />{" "}
+                          </a>
+                        </td>
 
-                          <td>
-                            <a
-                              className="btn "
-                              onClick={(e) => {
-                                edit(e, pro._id, pro);
-                              }}
-                            >
-                              <AiFillEdit color="green" />
-                            </a>
-                          </td>
-                        </tr>
-                      </Draggable>
+                        <td>
+                          <a
+                            className="btn "
+                            onClick={(e) => {
+                              edit(e, pro._id, pro);
+                            }}
+                          >
+                            <AiFillEdit color="green" />
+                          </a>
+                        </td>
+                      </tr>
+                      // </Draggable>
                     ))}
                 </Table>
               </Card>
@@ -702,77 +746,90 @@ export default function Addtask() {
                   {tasklist
                     .filter((post) => post.stages == 3)
                     .map((pro, index) => (
-                      <Draggable>
-                        <tr
-                          key={index}
-                          draggable
-                          onDragStart={(e) => onDragStart(e, pro._id)}
-                        >
-                          {/* <td className="col-2">{index + 1}</td> */}
+                      // <Draggable>
+                      <tr
+                        key={index}
+                        draggable
+                        onDragStart={(e) => onDragStart(e, pro._id)}
+                        className={
+                          bool.boolVal && bool.id == pro._id ? `onHide` : ``
+                        }
+                      >
+                        {/* <td className="col-2">{index + 1}</td> */}
 
-                          <td>{ReactHtmlParser(pro.task)}</td>
-                          <td>{ReactHtmlParser(pro.des)}</td>
-                          <td className="col-3">{pro.priority}</td>
+                        <td>{ReactHtmlParser(pro.task)}</td>
+                        <td>{ReactHtmlParser(pro.des)}</td>
+                        <td className="col-3">{pro.priority}</td>
 
-                          <td>{pro.date.substring(0, 10)}</td>
-                          <td>{pro.duedate.substring(0, 10)}</td>
-                          <td className="text-center">
-                            <Row style={{ width: "200px", marginLeft: "40px" }}>
-                              <Col lg={2} sm={2} md={2}>
-                                <a>
-                                  <AiOutlineBackward
-                                    size="25px"
-                                    onClick={() => editminus(pro._id)}
-                                  />
-                                </a>
-                              </Col>
-                              <Col lg={3} sm={3} md={3}>
-                                <input
-                                  type="text"
-                                  value={pro.stages}
-                                  disabled
-                                  style={{ width: "40px" }}
+                        <td>{pro.date.substring(0, 10)}</td>
+                        <td>{pro.duedate.substring(0, 10)}</td>
+                        <td className="text-center">
+                          <Row style={{ width: "200px", marginLeft: "40px" }}>
+                            <Col lg={2} sm={2} md={2}>
+                              <a>
+                                <AiOutlineBackward
+                                  size="25px"
+                                  onClick={() => editminus(pro._id)}
                                 />
-                              </Col>
+                              </a>
+                            </Col>
+                            <Col lg={3} sm={3} md={3}>
+                              <input
+                                type="text"
+                                value={pro.stages}
+                                disabled
+                                style={{ width: "40px" }}
+                              />
+                            </Col>
 
-                              <Col lg={2} sm={2} md={2}>
-                                <Button variant="none" disabled size="sm">
-                                  <AiOutlineForward
-                                    size="25px"
-                                    className="mb-3"
-                                    onClick={() => editadd(pro._id)}
-                                  />
-                                </Button>
-                              </Col>
-                            </Row>
-                          </td>
-                          <td>
-                            <a
-                              className="btn "
-                              onClick={() => deletetask(pro._id)}
-                            >
-                              {" "}
-                              <AiFillDelete color="red" />{" "}
-                            </a>
-                          </td>
+                            <Col lg={2} sm={2} md={2}>
+                              <Button variant="none" disabled size="sm">
+                                <AiOutlineForward
+                                  size="25px"
+                                  className="mb-3"
+                                  onClick={() => editadd(pro._id)}
+                                />
+                              </Button>
+                            </Col>
+                          </Row>
+                        </td>
+                        <td>
+                          <a
+                            className="btn "
+                            onClick={() => deletetask(pro._id)}
+                          >
+                            {" "}
+                            <AiFillDelete color="red" />{" "}
+                          </a>
+                        </td>
 
-                          <td>
-                            <a
-                              className="btn "
-                              onClick={(e) => {
-                                edit(e, pro._id, pro);
-                              }}
-                            >
-                              <AiFillEdit color="green" />
-                            </a>
-                          </td>
-                        </tr>
-                      </Draggable>
+                        <td>
+                          <a
+                            className="btn "
+                            onClick={(e) => {
+                              edit(e, pro._id, pro);
+                            }}
+                          >
+                            <AiFillEdit color="green" />
+                          </a>
+                        </td>
+                      </tr>
+                      // </Draggable>
                     ))}
                 </Table>
               </Card>
             </Col>
           </Row>
+          <div>
+            <Button
+              droppable
+              onDragOver={(e) => onDragOver(e)}
+              onDrop={(e) => dragTrash(e)}
+              className="trashButton"
+            >
+              <FaTrashAlt color="red" size={50} />
+            </Button>
+          </div>
         </Container>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -899,6 +956,24 @@ export default function Addtask() {
           </Modal.Body>
         </Modal>
       </Container>
+      <Modal show={modalDeleteShow} onHide={handleDeleteClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Confirmation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="alert alert-danger">
+            Are you sure you want to delete this?
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleDeleteClose}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={trash}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

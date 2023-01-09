@@ -7,6 +7,13 @@ let token = localStorage.getItem("_token");
 //   return axios.post(`${MAIN_URL}addTask`, data);
 // }
 
+//Captcha
+export function captcha(ctoken) {
+  console.log(ctoken);
+  return axios.post(`${MAIN_URL}captcha`, ctoken);
+}
+
+//ADD TASK
 export const addTask = async (data) => {
   console.log(data);
   const response = await axios.post(`${MAIN_URL}addTask`, data);
@@ -43,6 +50,11 @@ export function editstages(data) {
 //Edit Satges drag
 export function editstagesdrag(data) {
   return axios.post(`${MAIN_URL}editstagesdrag`, data);
+}
+export function trashDrag(id) {
+  console.log(id);
+  return axios.delete(`${MAIN_URL}deletedrag/${id}`);
+  // return axios.post(`${MAIN_URL}editstagesdrag`, id);
 }
 
 //contact US

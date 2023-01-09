@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 app.use(express.static(path.join(__dirname, "./tasks/build")));
-
+console.log(process.env.PORT);
 const userrouter = require("./routing/userrouter");
 app.use("/api/", userrouter);
 

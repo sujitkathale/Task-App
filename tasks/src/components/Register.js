@@ -57,12 +57,12 @@ export default function Register() {
           <br />
 
           <div className="  border cardll ">
-            <h3 className="text-uppercase text-center">
+            <h3 className="text-center">
               Register to <strong className="text-danger">TASKMANAGER</strong>
             </h3>
             <br />
 
-            <Form className="cardll text-uppercase">
+            <Form className="cardll ">
               <Form.Group className="mb-3">
                 <Form.Control
                   className="block"
@@ -76,7 +76,9 @@ export default function Register() {
                   required
                 />
                 {fname != "" && fname.length < 4 && (
-                  <span className="text-danger">Enter firstName correctly</span>
+                  <span className="text-danger text-center">
+                    Enter first Name correctly
+                  </span>
                 )}
               </Form.Group>
 
@@ -93,7 +95,9 @@ export default function Register() {
                   required
                 />
                 {lname != "" && lname.length < 4 && (
-                  <span className="text-danger">Enter lastName correctly</span>
+                  <span className="text-danger text-center">
+                    Enter last Name correctly
+                  </span>
                 )}
               </Form.Group>
 
@@ -110,7 +114,9 @@ export default function Register() {
                   required
                 />
                 {mobile != "" && mobile.length < 10 && (
-                  <span className="text-danger">Enter mobile correctly</span>
+                  <span className="text-danger text-center">
+                    Enter mobile correctly
+                  </span>
                 )}
               </Form.Group>
 
@@ -127,7 +133,9 @@ export default function Register() {
                   required
                 />
                 {email != "" && !regForEmail.test(email) && (
-                  <span className="text-danger">Enter email correctly</span>
+                  <span className="text-danger text-center">
+                    Enter email correctly
+                  </span>
                 )}
               </Form.Group>
 
@@ -144,7 +152,9 @@ export default function Register() {
                   required
                 />
                 {password != "" && password.length < 8 && (
-                  <span className="text-danger">Enter password correctly</span>
+                  <span className="text-danger text-center">
+                    Enter password correctly
+                  </span>
                 )}
               </Form.Group>
 
@@ -161,7 +171,9 @@ export default function Register() {
                   required
                 />
                 {confirmpassword != "" && confirmpassword != password && (
-                  <span className="text-danger">Passwords doesn't match</span>
+                  <span className="text-danger text-center">
+                    Passwords doesn't match
+                  </span>
                 )}
               </Form.Group>
               <br />
@@ -190,39 +202,20 @@ export default function Register() {
                   />
                   <label className="mt-1 pl-2 form-check-label">Female</label>
                 </div>
-                {/* <input
-                  type="radio"
-                  value="Male"
-                  name="gender"
-                  id="inlineRadio1"
-                  // className="mt-1 pl-2"
-                  onChange={(event) => {
-                    setGender(event.target.value);
-                  }}
-                />{" "} */}
-                {/* Male &nbsp;
-                <input
-                  type="radio"
-                  value="Female"
-                  name="gender"
-                  id="inlineRadio1"
-                  // className="mt-1 pl-2"
-                  onChange={(event) => {
-                    setGender(event.target.value);
-                  }}
-                />{" "}
-                Female */}
               </div>
 
               <br />
 
               <div className="text-center ">
-                <btn className="btn  btnlog" onClick={register}>
+                <btn
+                  className="btn btn-warning btn-lg btnlog"
+                  onClick={register}
+                >
                   Register
                 </btn>{" "}
                 <span>or</span>&nbsp;
-                <a className="btn  btnlog">
-                  <Link to="/" className=" text-dark text-uppercase">
+                <a className="btn btn-warning btn-lg btnlog">
+                  <Link to="/" className=" text-dark">
                     Login
                   </Link>
                 </a>

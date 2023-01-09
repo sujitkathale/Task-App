@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const usercontroller = require("../controller/usercontroller");
 const jwt = require("jsonwebtoken");
-const jwtSecret = "abcdefghijklmnopqrstuvwxyz";
+const jwtSecret = process.env.JWT_SECRET;
 const { check, validationResult } = require("express-validator");
 router.post(
   "/adduser",
@@ -46,7 +46,7 @@ router.post(
 );
 
 router.put("/changepassword", usercontroller.changepass);
-
+router.post("/captcha", usercontroller.captcha);
 router.post("/forgetemail", usercontroller.forgotemail);
 
 module.exports = router;

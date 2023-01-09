@@ -2,10 +2,11 @@ const registermodel = require("../db/RegisterSchema");
 const contactmodel = require("../db/ContactSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const jwtSecret = "ddsfftyy677yttfff";
+const jwtSecret = process.env.JWT_SECRET;
 const nodemailer = require("nodemailer");
 const otpmodel = require("../db/otpSchema");
 const { check, validationResult } = require("express-validator");
+const axios = require("axios");
 let mailTransporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -126,6 +127,29 @@ const usercontroller = {
           .status(200)
           .json({ status: 401, err: "Please Enter valid credintails" });
       }
+    }
+  },
+
+  captcha: async (req, res) => {
+    if (!req.body.ctoken) {
+      return res.status(400).json({ error: "reCaptcha token is missing" });
+    }
+    console.log("In Captcha backend");
+    try {
+      console.log("Captcha Token - >", req.body.ctoken);
+      const googleVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.reCaptchaSecret}&response=${req.body.ctoken}`;
+      const response = await axios.post(googleVerifyUrl);
+      // console.log(response);
+      const { success } = response.data;
+      // console.log(success);
+      if (success) {
+        //Do sign up and store user in database
+        return res.status(200).json({ success: true });
+      } else {
+        return res.status(400).json({ error: "Invalid Captcha. Try again." });
+      }
+    } catch (e) {
+      return res.status(400).json({ error: "reCaptcha error." });
     }
   },
 

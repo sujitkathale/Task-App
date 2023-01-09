@@ -46,7 +46,7 @@ const Contact = () => {
       <br />
       <br />
       <Container className=" border cardll ">
-        <h3 className="text-uppercase text-center">Contact Us</h3>
+        <h3 className="text-uppercase text-dark text-center">Contact Us</h3>
         <br />
 
         <Form>
