@@ -1,5 +1,5 @@
 :root {
-  --blue: rgb(16, 34, 56);
+  --blue: rgb(3, 8, 14);
   --white: rgb(236, 236, 236);
 }
 
@@ -218,7 +218,16 @@ input:focus {
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
+.modelstyle {
+  width: 800px !important;
+}
 
+.cardfooter {
+  padding: 20px;
+  margin-top: 60px;
+  height: 90px;
+  background: var(--text-color);
+}
 /* :root {
   --background-color: white;
 } */
