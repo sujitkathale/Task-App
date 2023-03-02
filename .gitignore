@@ -9,7 +9,11 @@
 /coverage
 
 
-.env
+/.env
+=======
+# production
+/.env
+
 
 # misc
 .DS_Store
